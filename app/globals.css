@@ -779,3 +779,368 @@ footer a:hover {
   }
 }
 
+/* Zen Chatbot Premium Styles */
+.zen-chatbot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  font-family: var(--font-poppins), sans-serif;
+}
+
+/* Toggle Button */
+.zen-chat-toggle-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 30px rgba(108, 99, 255, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.zen-chat-toggle-btn:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 35px rgba(0, 212, 255, 0.55);
+}
+
+.zen-chat-toggle-btn.active {
+  transform: scale(0.95) rotate(-90deg);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
+  color: #a0aec0;
+  box-shadow: none;
+}
+
+.zen-chat-toggle-btn .glow-effect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.zen-chat-toggle-btn:hover .glow-effect {
+  opacity: 1;
+}
+
+/* Chat Window Panel */
+.zen-chat-window {
+  position: fixed;
+  bottom: 105px;
+  right: 30px;
+  width: 380px;
+  height: 580px;
+  max-height: calc(100vh - 150px);
+  background: rgba(8, 11, 26, 0.82);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.9) translateY(30px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 10000;
+}
+
+.zen-chat-window.open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Chat Header */
+.zen-chat-header {
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zen-chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zen-chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(0, 212, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.zen-chat-avatar .lotus-svg {
+  width: 22px;
+  height: 22px;
+  color: var(--accent-cyan);
+  animation: floatLotus 4s ease-in-out infinite;
+}
+
+@keyframes floatLotus {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.05); }
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #080b1a;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.zen-chat-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.zen-chat-header p {
+  font-size: 12px;
+  color: #a0aec0;
+  margin: 0;
+}
+
+.zen-chat-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.zen-chat-close-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+/* Chat Messages Area */
+.zen-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+.zen-message-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.zen-message-wrapper.user {
+  justify-content: flex-end;
+}
+
+.zen-message-wrapper.assistant {
+  justify-content: flex-start;
+}
+
+.zen-message-bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.zen-message-wrapper.user .zen-message-bubble {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  color: white;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.15);
+}
+
+.zen-message-wrapper.assistant .zen-message-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  border: 1px solid var(--card-border);
+  border-bottom-left-radius: 4px;
+}
+
+/* suggestion chips */
+.zen-chat-suggestions {
+  padding: 0 24px 16px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestion-chip {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.suggestion-chip:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.3);
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+/* Chat Input Area */
+.zen-chat-input-form {
+  padding: 16px 24px 20px 24px;
+  background: rgba(8, 11, 26, 0.9);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+}
+
+.zen-chat-input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.zen-chat-input:focus {
+  border-color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+}
+
+.zen-chat-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.zen-chat-send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  border: none;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(108, 99, 255, 0.15);
+}
+
+.zen-chat-send-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 212, 255, 0.3);
+}
+
+.zen-chat-send-btn:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  color: #64748b;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Breathing loader dots */
+.zen-message-bubble.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-style: dashed !important;
+}
+
+.zen-breathing-loader {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.zen-breathing-loader span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  animation: breathe 1.8s ease-in-out infinite;
+}
+
+.zen-breathing-loader span:nth-child(2) {
+  animation-delay: 0.3s;
+  background: var(--accent-purple);
+}
+
+.zen-breathing-loader span:nth-child(3) {
+  animation-delay: 0.6s;
+  background: var(--accent-pink);
+}
+
+.loader-text {
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(0.8); opacity: 0.4; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+/* Responsiveness for Chatbot */
+@media (max-width: 500px) {
+  .zen-chatbot-container {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .zen-chat-window {
+    bottom: 90px;
+    right: 20px;
+    width: calc(100vw - 40px);
+    height: 480px;
+  }
+}
+
+

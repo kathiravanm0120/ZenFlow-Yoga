@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState, useRef } from 'react'
+import ChatBot from './components/ChatBot'
 
 type Poll = {
   id: number
@@ -475,6 +476,9 @@ export default function Home() {
           from original design.
         </p>
       </footer>
+
+      {/* Floating Yoga Chatbot */}
+      <ChatBot />
     </>
   )
 }
