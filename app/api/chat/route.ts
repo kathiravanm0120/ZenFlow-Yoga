@@ -64,8 +64,8 @@ If visitors ask you about poses or routine suggestions, feel free to give them s
       }
     }
 
-    // Call Gemini 1.5 Flash API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+    // Call Gemini 3.6 Flash API (active endpoint)
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`
 
     const response = await fetch(geminiUrl, {
       method: 'POST',
@@ -85,7 +85,13 @@ If visitors ask you about poses or routine suggestions, feel free to give them s
     }
 
     const data = await response.json()
-    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+    const parts = data.candidates?.[0]?.content?.parts || []
+    const responseText =
+      parts
+        .map((p: any) => p.text)
+        .filter(Boolean)
+        .join('\n')
+        .trim() ||
       "I was unable to formulate a response. Let us take a deep breath and try again. 🌬️"
 
     return NextResponse.json({ text: responseText })
