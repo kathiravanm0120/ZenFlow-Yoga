@@ -42,55 +42,115 @@ export default function Home() {
   const imageRef = useRef<HTMLImageElement>(null)
   const supabase = createClient()
 
+  const INITIAL_POLLS: Poll[] = [
+    { id: 1, question: 'Morning Sunrise Vinyasa (7:00 AM Daily Flow)' },
+    { id: 2, question: 'Beginner Friendly Hatha & Posture Alignment Workshop' },
+    { id: 3, question: 'Evening Stress-Relief Kundalini & Sound Bath' },
+  ]
+
+  // Helper to save polls to localStorage
+  const saveLocalPolls = (updated: Poll[]) => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('zenflow_community_polls', JSON.stringify(updated))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   // Fetch polls
   const getPolls = async () => {
-    const { data, error } = await supabase
-      .from('polls')
-      .select('*')
-      .order('id', { ascending: false })
+    try {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('zenflow_community_polls')
+        if (saved) {
+          const parsed = JSON.parse(saved)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setPolls(parsed)
+          } else {
+            setPolls(INITIAL_POLLS)
+            saveLocalPolls(INITIAL_POLLS)
+          }
+        } else {
+          setPolls(INITIAL_POLLS)
+          saveLocalPolls(INITIAL_POLLS)
+        }
+      }
+    } catch (e) {
+      setPolls(INITIAL_POLLS)
+    }
 
-    if (!error && data) {
-      setPolls(data)
+    // Try background Supabase fetch if active
+    try {
+      const { data, error } = await supabase
+        .from('polls')
+        .select('*')
+        .order('id', { ascending: false })
+
+      if (!error && data && data.length > 0) {
+        setPolls(data)
+        saveLocalPolls(data)
+      }
+    } catch (e) {
+      // Quiet fallback
     }
   }
 
   // Add poll
   const addPoll = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!question.trim()) return
+    const text = question.trim()
+    if (!text) return
 
-    const { error } = await supabase
-      .from('polls')
-      .insert([{ question }])
+    const newPoll: Poll = { id: Date.now(), question: text }
+    setPolls((prev) => {
+      const updated = [newPoll, ...prev]
+      saveLocalPolls(updated)
+      return updated
+    })
+    setQuestion('')
 
-    if (!error) {
-      setQuestion('')
-      getPolls()
+    try {
+      await supabase.from('polls').insert([{ question: text }])
+    } catch (e) {
+      // Local state is preserved
     }
   }
 
   // Delete poll
   const deletePoll = async (id: number) => {
-    await supabase
-      .from('polls')
-      .delete()
-      .eq('id', id)
+    setPolls((prev) => {
+      const updated = prev.filter((p) => p.id !== id)
+      saveLocalPolls(updated)
+      return updated
+    })
 
-    getPolls()
+    try {
+      await supabase.from('polls').delete().eq('id', id)
+    } catch (e) {
+      // Local state is preserved
+    }
   }
 
   // Update poll
   const updatePoll = async (id: number) => {
-    if (!editText.trim()) return
+    const text = editText.trim()
+    if (!text) return
 
-    await supabase
-      .from('polls')
-      .update({ question: editText })
-      .eq('id', id)
-
+    setPolls((prev) => {
+      const updated = prev.map((p) => (p.id === id ? { ...p, question: text } : p))
+      saveLocalPolls(updated)
+      return updated
+    })
     setEditingId(null)
     setEditText('')
-    getPolls()
+
+    try {
+      await supabase.from('polls').update({ question: text }).eq('id', id)
+    } catch (e) {
+      // Local state is preserved
+    }
   }
 
   useEffect(() => {
