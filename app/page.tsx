@@ -3,6 +3,8 @@
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState, useRef } from 'react'
 import ChatBot from './components/ChatBot'
+import Navbar from './components/Navbar'
+import { useAuth } from './context/AuthContext'
 
 type Poll = {
   id: number
@@ -28,6 +30,7 @@ const LotusIcon = () => (
 )
 
 export default function Home() {
+  const { classesList } = useAuth()
   const [question, setQuestion] = useState('')
   const [polls, setPolls] = useState<Poll[]>([])
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -289,55 +292,7 @@ export default function Home() {
       <div className="blob blob3" />
 
       {/* Navbar */}
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="logo" onClick={() => scrollToId('home')}>
-          <LotusIcon />
-          ZenFlow <span>Yoga</span>
-        </div>
-
-        <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-          <li>
-            <a href="#home" onClick={(e) => { e.preventDefault(); scrollToId('home') }}>
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="#types" onClick={(e) => { e.preventDefault(); scrollToId('types') }}>
-              Yoga
-            </a>
-          </li>
-          <li>
-            <a href="#stats" onClick={(e) => { e.preventDefault(); scrollToId('stats') }}>
-              Stats
-            </a>
-          </li>
-          <li>
-            <a href="#testimonials" onClick={(e) => { e.preventDefault(); scrollToId('testimonials') }}>
-              Reviews
-            </a>
-          </li>
-          <li>
-            <a href="#community" onClick={(e) => { e.preventDefault(); scrollToId('community') }}>
-              Community Voice
-            </a>
-          </li>
-        </ul>
-
-        <button className="nav-btn" onClick={() => scrollToId('community')}>
-          Join Now
-        </button>
-
-        {/* Hamburger Toggler */}
-        <button
-          className={`menu-toggle ${isMenuOpen ? 'open' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle navigation menu"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </nav>
+      <Navbar isScrolled={isScrolled} />
 
       {/* Hero Section */}
       <section className="hero" id="home">
@@ -371,41 +326,13 @@ export default function Home() {
         </p>
 
         <div className="cards">
-          <div className="card reveal" onMouseMove={handleCardMouseMove}>
-            <img
-              src="https://assets.ccbp.in/frontend/static-website/yoga-card1-img.png"
-              alt="Acro Yoga icon"
-            />
-            <h3>Acro Yoga</h3>
-            <p>Improve your overall strength, stability, and mutual physical trust.</p>
-          </div>
-
-          <div className="card reveal" onMouseMove={handleCardMouseMove}>
-            <img
-              src="https://assets.ccbp.in/frontend/static-website/yoga-card2-img.png"
-              alt="Vinyasa Yoga icon"
-            />
-            <h3>Vinyasa Yoga</h3>
-            <p>Build stamina, increase flow rate, and release daily built-up stress.</p>
-          </div>
-
-          <div className="card reveal" onMouseMove={handleCardMouseMove}>
-            <img
-              src="https://assets.ccbp.in/frontend/static-website/yoga-card3-img.png"
-              alt="Hatha Yoga icon"
-            />
-            <h3>Hatha Yoga</h3>
-            <p>Refine physical posture, structural alignment, and core stability.</p>
-          </div>
-
-          <div className="card reveal" onMouseMove={handleCardMouseMove}>
-            <img
-              src="https://assets.ccbp.in/frontend/static-website/yoga-card4-img.png"
-              alt="Kundalini Yoga icon"
-            />
-            <h3>Kundalini Yoga</h3>
-            <p>Elevate spiritual awareness, cognitive focus, and active energy flows.</p>
-          </div>
+          {classesList.map((cls) => (
+            <div key={cls.id} className="card reveal" onMouseMove={handleCardMouseMove}>
+              <img src={cls.image} alt={cls.title} />
+              <h3>{cls.title}</h3>
+              <p>{cls.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
